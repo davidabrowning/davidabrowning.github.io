@@ -3,8 +3,11 @@ class WebInterface {
         this.gameController = gameController;
     }
 
+    /**
+     * Creates the "How to play" instructions display
+     */
     populateInstructionMenu() {
-        let winningHand = [ 5, 18, 25, 28, 30, 35, 42, 47, 52, 57 ];
+        let winningHand = [ 2, 6, 15, 22, 30, 35, 42, 47, 52, 57 ];
         let progressHand = [ 1, 38, 55, 8, 50, 17, 11, 53, 12, 44 ];
         let winningHandDiv = document.querySelector("#example-winning-hand");
         let progressHandDiv = document.querySelector("#example-progress-hand");
@@ -43,8 +46,12 @@ class WebInterface {
         })
     }
 
+    /**
+     * Toggles the webpage between a display showing "how to play" instructions
+     * and the card game being played
+     */
     toggleInfoDisplay() {
-        let infoDiv = document.querySelector("#instructions");
+        let infoDiv = document.querySelector("#instructions-container");
         let playingAreaDiv = document.querySelector("#playing-area");
         if (infoDiv.classList.contains("hidden")) {
             infoDiv.classList.remove("hidden");
@@ -111,9 +118,9 @@ class WebInterface {
         }
     }
 
-    updateCard(playerId, cardPosition, cardValue, cardBackgroundColor, cardTextColor) {
+    updateCard(playerId, cardPosition, cardDisplayValue, cardBackgroundColor, cardTextColor) {
         let card = document.querySelector("#player-" + playerId + "-card-" + cardPosition);
-        card.innerText = cardValue;
+        card.innerText = cardDisplayValue;
         card.style.backgroundColor = cardBackgroundColor;
         card.style.color = cardTextColor;
     }
@@ -187,9 +194,9 @@ class WebInterface {
         card.classList.remove("selected-card");
     }
 
-    revealDrawPile(cardValue, cardBackgroundColor, cardTextColor) {
+    revealDrawPile(cardDisplayValue, cardBackgroundColor, cardTextColor) {
         let drawPileCard = document.querySelector("#draw-pile");
-        drawPileCard.innerText = cardValue;
+        drawPileCard.innerText = cardDisplayValue;
         drawPileCard.style.backgroundColor = cardBackgroundColor;
         drawPileCard.style.color = cardTextColor;
         drawPileCard.classList.add("selected-card");
@@ -203,11 +210,26 @@ class WebInterface {
         drawPileCard.classList.remove("selected-card");
     }
 
-    addToDiscardPile(cardValue, cardBackgroundColor, cardTextColor) {
+    addToDiscardPile(cardDisplayValue, cardBackgroundColor, cardTextColor) {
         let discardPileCard = document.querySelector("#discard-pile");
-        discardPileCard.innerText = cardValue;
+        discardPileCard.innerText = cardDisplayValue;
         discardPileCard.style.backgroundColor = cardBackgroundColor;
         discardPileCard.style.color = cardTextColor;
+    }
+
+    highlightPlayingArea(playerId) {
+        let playingArea = document.querySelector("#container-hand-" + playerId);
+        playingArea.classList.add("hand-active");
+    }
+
+    unhighlightPlayingArea(playerId) {
+        let playingArea = document.querySelector("#container-hand-" + playerId);
+        playingArea.classList.remove("hand-active");
+    }    
+
+    fadeDrawPilesForVictory() {
+        let drawDiscardPileContainer = document.querySelector("#container-draw-discard-piles");
+        drawDiscardPileContainer.style.opacity = 0.5;
     }
 
     highlightHandForVictory(playerId) {
@@ -215,5 +237,16 @@ class WebInterface {
         victoriousCards.forEach(cardDiv => {
             cardDiv.style.border = "5px solid yellow";
         });
+    }
+
+    highlightHandForDefeat(playerId) {
+        let defeatedCards = document.querySelectorAll("#container-hand-" + playerId + " .card");
+        defeatedCards.forEach(cardDiv => {
+            cardDiv.style.opacity = 0.5;
+        });
+    }    
+
+    resetPlayingArea() {
+        document.querySelector("#playing-area").innerHTML = "";
     }
 }
